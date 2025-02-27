@@ -4,28 +4,28 @@ services:
   timecase:
     container_name: timecase-backend
     restart: unless-stopped
-    image: 'alcalbg/php5.6-apache'
-      # alternative image: 'ascdc/apache2-php56:latest'
+    image: timecase-test  # Your locally built image
     ports:
-      - "9000:80"
+      - "9000:80"  # Expose the app on port 9000 of your host
     volumes:
-      - ./timecase:/var/www/html
+      - ./timecase:/var/www/html  # Bind the current directory to the container's /var/www/html
     depends_on:
-      - db
+      - db  # Make sure the database starts first
     tty: true
     networks:
       - timecase-network
 
   db:
     container_name: timecase-db
-    image: 'mysql:5.5'
+    image: mysql:5.5
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: mypass
     volumes:
-      - ./dbdata:/var/lib/mysql
+      - ./dbdata:/var/lib/mysql  # Persist database data
     networks:
-        - timecase-network
+      - timecase-network
 
 networks:
-    timecase-network:
+  timecase-network:
+    driver: bridge
